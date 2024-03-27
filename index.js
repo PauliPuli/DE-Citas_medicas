@@ -20,26 +20,52 @@ app.listen(3000, () => {
     `El servidor está inicializando en el puerto http://localhost:${PORT}`
   );
 });
-app.get('/', (req, res)=>{
-  res.send('Bienvenido al servidor de  clínica DENDE Spa 🩺')
+app.get("/", (req, res) => {
+  res.send("Bienvenido al servidor de  clínica DENDE Spa 🩺");
 });
 
 //Ruta usuario con f(x) asíncrona de api
-app.get('/usuarios', async (req,res)=>{
+app.get("/usuarios", async (req, res) => {
   try {
     const userApi = await axios.get(apiUrl);
-    const datApi= userApi.data.results[0];
+    const datApi = userApi.data.results[0];
     // console.log(data)//---> API llamada correctamente ✅
-    const id= uuidv4().slice(0, 6);
-    const tiempo= moment().format(fecha);
-    pacientes.push(datApi.name.first, datApi.name.last, datApi.gender, id, tiempo)
+    const nombre = datApi.name.first;
+    const apellido = datApi.name.last;
+    const genero = datApi.gender;
+    const id = uuidv4().slice(0, 6);
+    const tiempo = moment().format(fecha);
+    pacientes.push({ nombre, apellido, genero, id, tiempo });
     // console.log(datApi.gender) //Llamada a objetos de APIs funcionando correctamente ✅
-    // console.log(pacientes) --> Pusheado en array funcionando ✅
+    // console.log(pacientes); --> Pusheado en array funcionando ✅
 
-    const userXGender=
+    const userXGender = _.partition(pacientes, (user) => {
+      return user.genero == "female";
+    });
 
-  } catch (error){
-    console.log(chalk.red.bgYelow('Lo sentimos, su petición no ha sido ejecutada\n'+ error));
+    const template = `
+   <h2>Agendamiento - Clínica DENDE Spa 🩺</h2>
+   <h5>Mujeres</h5>
+   <ol>
+   ${userXGender[0].map((user) => {
+     return `<li>Nombre: ${user.nombre} - Apellido: ${user.apellido} - Id: ${user.id} - Hora: ${user.tiempo}</li>`;
+   })}
+   </ol>
+   <h5>Hombres</h5>
+   <ol>
+   ${userXGender[1].map((user) => {
+     return `<li>Nombre: ${user.nombre} - Apellido: ${user.apellido} - Id: ${user.id} - Hora: ${user.tiempo}</li>`;
+   })}
+   </ol>
+   `;
+    console.log(
+      chalk.blue.bgWhite(
+        `Nombre: ${nombre} - Apellido: ${apellido} - Género: ${genero} - Id: ${id} - Hora: ${tiempo}`
+      )
+    );
+    res.send(template);
+  } catch (error) {
+    console.log(chalk.red.bgYellow(`Lo sentimos, su petición no ha sido ejecutada <hr> ${error}`));
   }
 });
 
