@@ -8,14 +8,14 @@ import { v4 as uuidv4 } from "uuid";
 //constantes globales
 //servidor
 const app = express();
-const PORT = 3000;
+const PORT = 3001;
 //array de pacientes
 const pacientes = [];
 const apiUrl = "https://randomuser.me/api/";
 const fecha = "MMMM Do YYYY: hh:mm:ss a";
 
 //Construcción servidor
-app.listen(3000, () => {
+app.listen(3001, () => {
   console.log(
     `El servidor está inicializando en el puerto http://localhost:${PORT}`
   );
@@ -69,39 +69,4 @@ app.get("/usuarios", async (req, res) => {
   }
 });
 
-//Ruta usuario con llamado a APIs
-// app.get("/usuarios", async (req, res) => {
-//   try {
-//     const userApi = await axios.get(apiUrl);
-//     const data = userApi.data.result[0];
-//     const genero= userApi.data.result[0].gender;
 
-//     const id = uuidv4().slice(0, 6);
-//     const tiempo= moment().format(fecha);
-//     const usuariosXGenero = _.partition(usuarios, (user) => {
-//       return user.genero === "female";
-//     });
-//     console.log(usuariosXGenero[0])
-// const template=`
-// <h1>Agendamiento - Clínica DENDE Spa 🩺</h1>
-// <h5>Mujeres</h5>
-// <ol>
-// ${usuariosXGenero[0].map((user)=>{
-// return `<li>Nombre: ${user.data.name.first} - Apellido: ${user.data.name.last} - ID: ${user.id}- Fecha agendamiento: ${user.tiempo}`
-// })}
-// </ol>
-// `
-
-// res.send(template);
-//   } catch (error) {
-//     res.send('Lo sentimos, su petición no ha podido ser resuelta')
-//     console.log(
-//       chalk.red.bgYellow(
-//         "Uh oh, something has gone wrong. Please tweet us @randomapi about the issue. Thank you." +
-//           error
-//       )
-//     );
-//   }
-// });
-
-// //
